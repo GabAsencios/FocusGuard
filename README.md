@@ -10,9 +10,9 @@ A real-time distraction detection system that monitors both webcam and screen ac
 - **Temporal Filtering**: Reduces false positives with grace periods and majority voting
 - **GPU Acceleration**: CUDA support for faster inference
 
-Custom Datasets: https://huggingface.co/datasets/GabAsencios/FocusGuard/tree/main/data
+**Custom Datasets:** https://huggingface.co/datasets/GabAsencios/FocusGuard/tree/main/data
 
-Trained Models: https://huggingface.co/datasets/GabAsencios/FocusGuard/tree/main/models
+**Trained Models:** https://huggingface.co/datasets/GabAsencios/FocusGuard/tree/main/models
 
 ## Directory Structure
 
