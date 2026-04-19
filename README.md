@@ -198,7 +198,7 @@ You can modify the following parameters in `main.py`:
 
 ## Contributing
 
-Contributions are welcome! Please ensure code follows the existing structure and includes appropriate documentation.
+
 
 ## License
 
