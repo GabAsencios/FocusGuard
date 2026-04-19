@@ -4,15 +4,15 @@ FocusGuard - Screenshot Dataset Capture Script
 Captures screenshots at regular intervals and saves them with class labels.
 
 Usage:
-    python DatasetBuilder.py --class_name Gaming --output_dir dataset --interval 3
+    python DatasetBuilder.py --class_name class --output_dir data --interval 3
 
 Arguments:
     --class_name  : One of [YouTube, Twitch]
-    --output_dir  : Root folder where screenshots will be saved (default: dataset)
+    --output_dir  : Root folder where screenshots will be saved (default: data)
     --interval    : Seconds between captures (default: 3)
 
 Example:
-    python capture_screenshots.py --class_name YouTube --output_dir dataset --interval 3
+    python capture_screenshots.py --class_name YouTube --output_dir data --interval 3
 """
 
 import argparse
@@ -28,9 +28,9 @@ from PIL import Image
 # Configuration
 # ---------------------------------------------------------------------------
 
-VALID_CLASSES = ["YouTube", "Twitch","Gaming"]
+VALID_CLASSES = ["YouTube", "Twitch","Gaming","Productive"]
 DEFAULT_INTERVAL = 3
-DEFAULT_OUTPUT_DIR = "dataset"
+DEFAULT_OUTPUT_DIR = "data"
 
 
 # ---------------------------------------------------------------------------
@@ -63,7 +63,7 @@ def parse_args() -> argparse.Namespace:
         "--output_dir",
         type=str,
         default=DEFAULT_OUTPUT_DIR,
-        help="Root directory to save screenshots (default: dataset)",
+        help="Root directory to save screenshots (default: data)",
     )
     parser.add_argument(
         "--interval",
@@ -79,15 +79,15 @@ def setup_output_dir(output_dir: str, class_name: str) -> str:
     Create the output directory for the given class if it doesn't exist.
 
     Args:
-        output_dir (str): Root dataset directory.
+        output_dir (str): Root data directory.
         class_name (str): Class label (subfolder name).
 
     Returns:
         str: Full path to the class subfolder.
 
     Example:
-        path = setup_output_dir("dataset", "Gaming")
-        # Creates ./dataset/Gaming/ and returns its path
+        path = setup_output_dir("data", "Gaming")
+        # Creates ./data/Gaming/ and returns its path
     """
     class_dir = os.path.join(output_dir, class_name)
     os.makedirs(class_dir, exist_ok=True)
@@ -109,15 +109,15 @@ def capture_screenshot(class_dir: str, class_name: str, index: int) -> str:
         str: Full path to the saved screenshot file.
 
     Example:
-        path = capture_screenshot("dataset/Gaming", "Gaming", 42)
-        # Saves dataset/Gaming/Gaming_20260416_143022_00042.png
+        path = capture_screenshot("data/Gaming", "Gaming", 42)
+        # Saves data/Gaming/Gaming_20260416_143022_00042.png
     """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = f"{class_name}_{timestamp}_{index:05d}.png"
     filepath = os.path.join(class_dir, filename)
 
     with mss.mss() as sct:
-        img = sct.grab(sct.monitors[2])
+        img = sct.grab(sct.monitors[1])
         screenshot = Image.frombytes("RGB", img.size, img.bgra, "raw", "BGRX")
     screenshot.save(filepath)
 
@@ -139,7 +139,7 @@ def run_capture_session(class_name: str, output_dir: str, interval: int) -> None
         None
 
     Example:
-        run_capture_session("YouTube", "dataset", 3)
+        run_capture_session("YouTube", "data", 3)
     """
     class_dir = setup_output_dir(output_dir, class_name)
 
@@ -178,7 +178,7 @@ def print_session_summary(class_dir: str, class_name: str, count: int) -> None:
         None
 
     Example:
-        print_session_summary("dataset/Gaming", "Gaming", 120)
+        print_session_summary("data/Gaming", "Gaming", 120)
     """
     total_files = len([f for f in os.listdir(class_dir) if f.endswith(".png")])
     total_size_mb = sum(
