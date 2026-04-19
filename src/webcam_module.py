@@ -1,6 +1,8 @@
 import time
 import torch
+import winsound
 from ultralytics import YOLO
+
 
 
 class FocusGuardWebcam:
@@ -24,7 +26,7 @@ class FocusGuardWebcam:
         detector = FocusGuardWebcam('models/yolov8n.pt')
     """
 
-    def __init__(self, model_path, conf_threshold=0.4, event_threshold=3, grace_period=0.5):
+    def __init__(self, model_path, conf_threshold=0.5, event_threshold=3, grace_period=0.5):
         # Determine device for RTX 2070 utilization
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.model = YOLO(model_path).to(self.device)
@@ -34,7 +36,7 @@ class FocusGuardWebcam:
         self.event_threshold = event_threshold
         self.grace_period = grace_period
 
-        # CRITICAL: Initialize the attributes that caused the error
+        # Initialize the attributes that caused the error
         self.last_seen_times = {"cell phone": 0, "person": 0}
         self.start_times = {"cell phone": None, "absence": None}
 
@@ -72,6 +74,7 @@ class FocusGuardWebcam:
                 self.start_times["cell phone"] = current_time
             elif current_time - self.start_times["cell phone"] >= self.event_threshold:
                 confirmed_events.append("Phone Distraction")
+                self._play_phone_alert()
         else:
             if self.start_times["cell phone"] and (
                     current_time - self.last_seen_times["cell phone"] > self.grace_period):
@@ -83,7 +86,16 @@ class FocusGuardWebcam:
                 self.start_times["absence"] = current_time
             elif current_time - self.start_times["absence"] >= self.event_threshold:
                 confirmed_events.append("User Absent")
+                self._play_absence_alert()
         else:
             self.start_times["absence"] = None
 
         return confirmed_events, annotated_frame
+
+    def _play_phone_alert(self):
+        """Plays a high-pitched beep for phone distraction (1000 Hz)."""
+        winsound.Beep(1000, 300)
+
+    def _play_absence_alert(self):
+        """Plays a low-pitched beep for user absence (500 Hz)."""
+        winsound.Beep(500, 300)

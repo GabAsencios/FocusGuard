@@ -21,7 +21,7 @@ def run_focus_guard():
 
     # Initialize components with paths to your weights
     webcam = FocusGuardWebcam(model_path='models/yolov8m.pt')
-    screen = ScreenClassifier(model_path='models/resnet18_screen_ADAM_model.pth')
+    screen = ScreenClassifier(model_path='models/resnet18_screen_AdamW_model.pth')
     # logger = Logger(output_file='logs/distractions.csv')
 
     cap = cv2.VideoCapture(0)
