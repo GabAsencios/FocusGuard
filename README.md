@@ -128,49 +128,6 @@ You can modify the following parameters in `main.py`:
 - `monitor_index`: Monitor to capture (1 = primary, 2 = secondary)
 - `dropout_rate`: Dropout rate matching training config (default: 0.5)
 
-### Example Usage
-
-```python
-from src import FocusGuardWebcam, ScreenClassifier
-import cv2
-import time
-
-# Initialize components
-webcam = FocusGuardWebcam(model_path='models/yolov8m.pt')
-screen = ScreenClassifier(model_path='models/resnet18_screen_AdamW_model.pth')
-
-cap = cv2.VideoCapture(0)
-CAPTURE_INTERVAL = 3
-last_screen_capture = 0
-
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
-
-    # Webcam detection
-    webcam_events, annotated_frame = webcam.detect_and_filter(frame)
-
-    # Screen classification
-    current_time = time.time()
-    if current_time - last_screen_capture >= CAPTURE_INTERVAL:
-        screen.detect_and_alert()
-        last_screen_capture = current_time
-
-    # Display alerts
-    if webcam_events:
-        for event in webcam_events:
-            print(f"ALARM: {event}")
-
-    # Show webcam feed
-    cv2.imshow('FocusGuard Monitor', annotated_frame)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
-```
 
 ## Controls
 
@@ -241,11 +198,11 @@ Contributions are welcome! Please ensure code follows the existing structure and
 
 ## License
 
-[Add your license here]
+
 
 ## Authors
 
-[Add your name/team here]
+Gabriel Asencios
 
 ## Acknowledgments
 
